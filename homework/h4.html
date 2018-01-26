@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Deep Patel Homework 4</title>
+        <style>
+            * {
+                font-size: 1.1em;
+                font-family: arial;
+            }
+            
+            #question9Img {
+                display: block;
+                width: 75%;
+            }
+            
+            #question8body {
+                display: block;
+                margin-top: 5px;
+                padding: 15px;
+                background-color: #F0F0F0;
+            }
+            
+            #question8property {
+                display: block;
+                margin-left: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Deep Patel - Homework 4</h1>
+        <form>
+            <input type="text" name="name" placeholder="First and last name"/>
+            <hr>
+            <select name="OS">
+                <option value="selectState">Select your state</option>
+                <option value="illinois">IL</option>
+                <option value="wisconsin">WI</option>
+            </select>
+            <hr>
+            <input type="text" name="course" list="courses" placeholder="Choose a course"/>
+            <datalist id="courses">
+                <option value="CS107"></option>
+                <option value="CS109"></option>
+                <option value="CS111"></option>
+                <option value="CS141"></option>
+                <option value="CS151"></option>
+            </datalist>
+            <a href="https://www.cs.uic.edu/~grad/CS_Flowchart.pdf">UIC Computer Science Undergraduate Prerequisite Flow-Chart</a>
+            <hr>
+            <input type="radio" name="collegeYear" value="freshman"> Freshman<br>
+            <input type="radio" name="collegeYear" value="sophomore"> Sophomore<br>
+            <input type="radio" name="collegeYear" value="junior"> Junior<br>
+            <input type="radio" name="collegeYear" value="senior"> Senior<br>
+            <input type="radio" name="collegeYear" value="grad"> Grad<br>
+            <hr>
+            <input type="checkbox" name="expenses" value="car"> Car<br>
+            <input type="checkbox" name="expenses" value="phone"> Phone<br>
+            <input type="checkbox" name="expenses" value="lunch"> Lunch<br>
+            <hr>
+        </form>
+        <h2>Answers to questions</h2>
+        <ol>
+            <li>The box model states that all HTML elements can be considered as boxes. Each element is wrapped by box with consist of margins, borders, padding, and content.</li>
+            <li>A "block-level" element occupies the entire space of its parent element. They always start on a new line and takes up the full width of parent element.</li>
+            <li>Paragraph is an example tag that is by default rendered as block-level element.</li>
+            <li>An "inline" element occupies the space bounded by the tags defining the element. They do not start on a new line and only takes up as much width as necessary.</li>
+            <li>Button is an example tag that is by default rendered as inline element.</li>
+            <li>CSS can be included in a seperate file and linked to in html file using link tag, or it can be embedded into HTML file using style tag inside head.</li>
+            <li>CSS selectors are patterns used to select elements for styling.</li>
+            <li>The following CSS rule can be used to set the background color of body to #0000FF (blue).<span id="question8body">body { <span id="question8property">background-color: #0000FF;</span> }</span></li>
+            <li><img id="question9Img" src="https://cppm.uic.edu/images/master_plan/Image%20(6).jpg" alt="CPPM master plan"></li>
+        </ol>
+    </body>
+</html>
