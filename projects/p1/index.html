@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Landing Page - Start Bootstrap Theme</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet" type="text/css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" type="text/css">
+
+    <!-- Custom styles for this template -->
+    <link href="css/landing-page.min.css" rel="stylesheet">
+    <link href="css/draggable.css" rel="stylesheet">
+    
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    
+    <style>
+      .carousel-item {
+        height: 65vh;
+        min-height: 300px;
+        background: no-repeat center center scroll;
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+      }
+      
+      #contact {
+        font: 400 15px Lato, sans-serif;
+        line-height: 1.8;
+        color: #818181;
+      }
+      
+      #contact h2 {
+        font-size: 24px;
+        text-transform: uppercase;
+        color: #303030;
+        font-weight: 600;
+        margin-bottom: 30px;
+      } 
+      #contact.container-fluid {
+        padding: 60px 50px;
+      }
+      #contact .fas {
+        margin-left: 5px;
+      }
+      #mainNav {
+        background-color: #00B5E2;
+        color: #001E62;
+      }
+      
+      .testimonials h5 {
+          font-size: 1.28571429em;
+          font-weight: 700;
+          line-height: 1.2857em;
+          margin: 0;
+      }
+      
+      .testimonials .card {
+          font-size: 1em;
+          overflow: hidden;
+          padding: 0;
+          border: none;
+          border-radius: .28571429rem;
+          box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
+      }
+      
+      .testimonials .card-block {
+          font-size: 1em;
+          position: relative;
+          margin: 0;
+          padding: 1em;
+          border: none;
+          border-top: 1px solid rgba(34, 36, 38, .1);
+          box-shadow: none;
+      }
+      
+      .testimonials .card-img-top {
+          display: block;
+          width: 100%;
+          height: auto;
+      }
+      
+      .testimonials .card-title {
+          font-size: 1.28571429em;
+          font-weight: 700;
+          line-height: 1.2857em;
+      }
+      
+      .testimonials .card-text {
+          clear: both;
+          margin-top: .5em;
+          color: rgba(0, 0, 0, .68);
+      }
+    </style>
+    
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand js-scroll-trigger" href="#page-top">Big Dreams</a>
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          Menu
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav text-uppercase ml-auto">
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#services">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#portfolio">Portfolio</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#team">Team</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link js-scroll-trigger" href="#contact">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Masthead -->
+    <header>
+      <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+          <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner" role="listbox">
+          <!-- Slide One - Set the background image for this slide in the line below -->
+          <div class="carousel-item active" style="background-image: url('https://picsum.photos/1900/1080')">
+            <div class="carousel-caption d-none d-md-block">
+              <h3>First Slide</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+            </div>
+          </div>
+          <!-- Slide Two - Set the background image for this slide in the line below -->
+          <div class="carousel-item" style="background-image: url('https://placebear.com/g/1900/1080')">
+            <div class="carousel-caption d-none d-md-block">
+              <h3>Second Slide</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+            </div>
+          </div>
+          <!-- Slide Three - Set the background image for this slide in the line below -->
+          <div class="carousel-item" style="background-image: url('https://picsum.photos/1900/1080/?random')">
+            <div class="carousel-caption d-none d-md-block">
+              <h3>Third Slide</h3>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- Icons Grid -->
+    <section class="features-icons bg-light text-center" id="services">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+              <div class="features-icons-icon d-flex">
+                <i class="icon-screen-desktop m-auto text-primary"></i>
+              </div>
+              <h3>Service One</h3>
+              <p class="lead mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+              <div class="features-icons-icon d-flex">
+                <i class="icon-layers m-auto text-primary"></i>
+              </div>
+              <h3>Service Two</h3>
+              <p class="lead mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+              <div class="features-icons-icon d-flex">
+                <i class="icon-check m-auto text-primary"></i>
+              </div>
+              <h3>Service Three</h3>
+              <p class="lead mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+              <div class="features-icons-icon d-flex">
+                <i class="icon-screen-smartphone m-auto text-primary"></i>
+              </div>
+              <h3>Service Four</h3>
+              <p class="lead mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+              <div class="features-icons-icon d-flex">
+                <i class="icon-menu m-auto text-primary"></i>
+              </div>
+              <h3>Service Five</h3>
+              <p class="lead mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+              <div class="features-icons-icon d-flex">
+                <i class="icon-user m-auto text-primary"></i>
+              </div>
+              <h3>Service Six</h3>
+              <p class="lead mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Image Showcases -->
+    <section class="showcase" id="portfolio">
+      <div class="container-fluid p-0">
+        <div class="row no-gutters">
+
+          <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('img/bg-showcase-1.jpg');"></div>
+          <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+            <h2>Project One</h2>
+            <p class="lead mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+          </div>
+        </div>
+        <div class="row no-gutters">
+          <div class="col-lg-6 text-white showcase-img" style="background-image: url('img/bg-showcase-2.jpg');"></div>
+          <div class="col-lg-6 my-auto showcase-text">
+            <h2>Project Two</h2>
+            <p class="lead mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+          </div>
+        </div>
+        <div class="row no-gutters">
+          <div class="col-lg-6 order-lg-2 text-white showcase-img" style="background-image: url('img/bg-showcase-3.jpg');"></div>
+          <div class="col-lg-6 order-lg-1 my-auto showcase-text">
+            <h2>Project Three</h2>
+            <p class="lead mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Testimonials -->
+    <section class="testimonials text-center bg-light" id="about">
+      <div class="container">
+        <h2 class="mb-5">What people are saying about us...</h2>
+        <div class="row">
+          <div class="col mt-4">
+            <div class="card text-left">
+              <img class="card-img-top" src="img/testimonials-1.jpg">
+              <div class="card-block">
+                <h5 class="text-bold">Margaret E.</h5>
+                <div class="card-text">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam velit quisquam veniam excepturi temporibus inventore corporis dicta sit culpa veritatis placeat earum, dolorum asperiores, delectus dolore voluptatibus, at magnam nobis!
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col mt-4">
+            <div class="card text-left">
+              <img class="card-img-top" src="img/testimonials-2.jpg">
+              <div class="card-block">
+                <h5 class="text-bold">Fred S.</h5>
+                <div class="card-text">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col mt-4">
+            <div class="card text-left">
+              <img class="card-img-top" src="img/testimonials-3.jpg">
+              <div class="card-block">
+                <h5 class="text-bold">Sarah	W.</h5>
+                <div class="card-text">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Listings -->
+    <section class="row-section" id="team">
+      <div class="container">
+  	    <div class="row">
+  		    <h2 class="text-center"><span>Dragable Team Memebers</span>Created with <i class="fa fa-heart"></i> from<a href="http://grafreez.com"> Grafreez.com</a></h2>
+  	    </div>
+  	    <div class="col-md-10 offset-md-1 row-block bg-light">
+  	        <ul id="sortable">
+  	            <li><div class="media">
+  	            <div class="media-left align-self-center">
+  	                <img class="rounded-circle" src="https://randomuser.me/api/portraits/women/50.jpg">
+  	            </div>
+  	            <div class="media-body">
+  	                <h4>Camila Terry</h4>
+  	                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+  	            </div>
+  	            <div class="media-right align-self-center">
+  	                <a href="#" class="btn btn-default">Contact Now</a>
+  	            </div>
+  	        </div></li>
+  	            <li><div class="media">
+  	            <div class="media-left align-self-center">
+  	                <img class="rounded-circle" src="https://randomuser.me/api/portraits/men/42.jpg">
+  	            </div>
+  	            <div class="media-body">
+  	                <h4>Joel Williamson</h4>
+  	                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+  	            </div>
+  	            <div class="media-right align-self-center">
+  	                <a href="#" class="btn btn-default">Contact Now</a>
+  	            </div>
+  	        </div></li>
+  	            <li><div class="media">
+  	            <div class="media-left align-self-center">
+  	                <img class="rounded-circle" src="https://randomuser.me/api/portraits/women/67.jpg">
+  	            </div>
+  	            <div class="media-body">
+  	                <h4>Deann Payne</h4>
+  	                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+  	            </div>
+  	            <div class="media-right align-self-center">
+  	                <a href="#" class="btn btn-default">Contact Now</a>
+  	            </div>
+  	        </div></li>
+  	            <li><div class="media">
+  	            <div class="media-left align-self-center">
+  	                <img class="rounded-circle" src="https://randomuser.me/api/portraits/women/50.jpg">
+  	            </div>
+  	            <div class="media-body">
+  	                <h4>Leona Hunter</h4>
+  	                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+  	            </div>
+  	            <div class="media-right align-self-center">
+  	                <a href="#" class="btn btn-default">Contact Now</a>
+  	            </div>
+  	        </div></li>
+  	            <li><div class="media">
+  	            <div class="media-left align-self-center">
+  	                <img class="rounded-circle" src="https://randomuser.me/api/portraits/men/89.jpg">
+  	            </div>
+  	            <div class="media-body">
+  	                <h4>Donald Perkins</h4>
+  	                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation</p>
+  	            </div>
+  	            <div class="media-right align-self-center">
+  	                <a href="#" class="btn btn-default">Contact Now</a>
+  	            </div>
+  	        </div></li>
+  	        
+  	            
+  	        
+  	        </ul>
+  	    </div>
+  </div>
+  </section>
+    <script>
+      $(function() {
+        $("#sortable").sortable();
+        $("#sortable").disableSelection();
+      });
+    </script>
+    <script	  src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    
+    <!-- Container (Contact Section) -->
+    <div id="contact" class="container-fluid bg-light">
+      <h2 class="text-center">CONTACT</h2>
+      <div class="row">
+        <div class="col-sm-5">
+          <p>Contact us and we'll get back to you within 24 hours.</p>
+          <p><span class="fas fa-map-marker-alt"></span> Chicago, US</p>
+          <p><span class="fas fa-mobile-alt"></span> +1 (800) 244-3732</p>
+          <p><span class="fas fa-envelope"></span> support@bigdreams.com</p>
+        </div>
+        <div class="col-sm-7">
+          <div class="row">
+            <div class="col-sm-6 form-group">
+              <input class="form-control" id="name" name="name" placeholder="Name" type="text" required>
+            </div>
+            <div class="col-sm-6 form-group">
+              <input class="form-control" id="email" name="email" placeholder="Email" type="email" required>
+            </div>
+          </div>
+          <textarea class="form-control" id="comments" name="comments" placeholder="Comment" rows="5"></textarea><br>
+          <div class="row">
+            <div class="col-sm-12 form-group">
+              <button class="btn btn-default pull-right" type="submit">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Add Google Maps -->
+    <div id="googleMap" style="height:400px;width:100%;"></div>
+    <script>
+      function myMap() {
+        var myCenter = new google.maps.LatLng(41.878114, -87.629798);
+        var mapProp = {center:myCenter, zoom:12, scrollwheel:false, draggable:false, mapTypeId:google.maps.MapTypeId.ROADMAP};
+        var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+        var marker = new google.maps.Marker({position:myCenter});
+        marker.setMap(map);
+      }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAM-NxYi-E6HD1N18M75-jbqIwuo-CDzSA&callback=myMap"></script>
+
+    <!-- Footer -->
+    <footer class="footer bg-light">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 h-100 text-center text-lg-left my-auto">
+            <ul class="list-inline mb-2">
+              <li class="list-inline-item">
+                <a href="#">About</a>
+              </li>
+              <li class="list-inline-item">&sdot;</li>
+              <li class="list-inline-item">
+                <a href="#">Contact</a>
+              </li>
+              <li class="list-inline-item">&sdot;</li>
+              <li class="list-inline-item">
+                <a href="#">Terms of Use</a>
+              </li>
+              <li class="list-inline-item">&sdot;</li>
+              <li class="list-inline-item">
+                <a href="#">Privacy Policy</a>
+              </li>
+            </ul>
+            <p class="text-muted small mb-4 mb-lg-0">&copy; Your Website 2018. All Rights Reserved.</p>
+          </div>
+          <div class="col-lg-6 h-100 text-center text-lg-right my-auto">
+            <ul class="list-inline mb-0">
+              <li class="list-inline-item mr-3">
+                <a href="#">
+                  <i class="fa fa-facebook fa-2x fa-fw"></i>
+                </a>
+              </li>
+              <li class="list-inline-item mr-3">
+                <a href="#">
+                  <i class="fa fa-twitter fa-2x fa-fw"></i>
+                </a>
+              </li>
+              <li class="list-inline-item">
+                <a href="#">
+                  <i class="fa fa-instagram fa-2x fa-fw"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
