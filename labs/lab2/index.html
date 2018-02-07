@@ -21,19 +21,19 @@
         </div>
         <div class="container" id="search">
             <input type="text" name="query" placeholder=""/>
-            <button id="search">Search</button>
+            <button id="btnSearch">Search</button>
         </div>
         <div class="container" id="results">
             
         </div>
         
         <script>
-            $(function doSearch() {
+            function doSearch() {
                 // Built by LucyBot. www.lucybot.com
                 var url = "https://api.nytimes.com/svc/movies/v2/reviews/search.json";
                 url += '?' + $.param({
                   'api-key': "251b1e4a1fda4c40bcaa9704e9350f34",
-                  'query': "Deadpool"
+                  'query': $("input[name='query']").val()
                 });
                 $.ajax({
                   url: url,
@@ -43,7 +43,14 @@
                 }).fail(function(err) {
                   throw err;
                 });
-            });
+            }
+            
+            function loadResponse(response) {
+                
+            }
+            
+            $("#btnSearch").click(function() { doSearch(); });
+            doSearch();
         </script>
     </body>
 </html>
