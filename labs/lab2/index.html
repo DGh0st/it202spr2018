@@ -26,5 +26,23 @@
         <div class="container" id="results">
             
         </div>
+        
+        <script>
+            $(function doSearch() {
+                // Built by LucyBot. www.lucybot.com
+                var url = "https://api.nytimes.com/svc/archive/v1/2016/1.json";
+                url += '?' + $.param({
+                  'api-key': "251b1e4a1fda4c40bcaa9704e9350f34"
+                });
+                $.ajax({
+                  url: url,
+                  method: 'GET',
+                }).done(function(result) {
+                  console.log(result);
+                }).fail(function(err) {
+                  throw err;
+                });
+            });
+        </script>
     </body>
 </html>
