@@ -30,9 +30,10 @@
         <script>
             $(function doSearch() {
                 // Built by LucyBot. www.lucybot.com
-                var url = "https://api.nytimes.com/svc/archive/v1/2016/1.json";
+                var url = "https://api.nytimes.com/svc/movies/v2/reviews/search.json";
                 url += '?' + $.param({
-                  'api-key': "251b1e4a1fda4c40bcaa9704e9350f34"
+                  'api-key': "251b1e4a1fda4c40bcaa9704e9350f34",
+                  'query': "Deadpool"
                 });
                 $.ajax({
                   url: url,
