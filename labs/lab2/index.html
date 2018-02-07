@@ -14,16 +14,23 @@
         <!-- Bootstrap core JavaScript -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        
+        <style type="text/css">
+            .screen {
+                display: none;
+            }
+        </style>
     </head>
     <body>
-        <div class="container" id="home">
-            
+        <div class="container screen" id="home">
+            <p>Get Started</p>
+            <button type"button" class="btn btn-primary" id="start">Start</button>
         </div>
-        <div class="container" id="search">
+        <div class="container screen" id="search">
             <input type="text" name="query" placeholder=""/>
-            <button id="btnSearch">Search</button>
+            <button type="button" class="btn btn-primary" id="btnSearch">Search</button>
         </div>
-        <div class="container" id="results">
+        <div class="container screen" id="results">
             
         </div>
         
@@ -39,18 +46,27 @@
                   url: url,
                   method: 'GET',
                 }).done(function(result) {
-                  console.log(result);
+                  loadResponse(result);
                 }).fail(function(err) {
                   throw err;
                 });
             }
             
             function loadResponse(response) {
-                
+                console.log(response);
+                console.log(response.results);
+                $("#results").append("<p>Received " + response.results.length + " results.</p>");
+                $.each(response.results, function(i, v) {
+                    var review = v["headline"];
+                    $("#results").append("<p><a href=\"" + v["link"]["url"] + "\">" + review + "</a> by " + v["byline"] + "</p>");
+                });
             }
             
             $("#btnSearch").click(function() { doSearch(); });
-            doSearch();
+            
+            $("body").ready(function() {
+                $("#home").show();
+            })
         </script>
     </body>
 </html>
