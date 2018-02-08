@@ -24,18 +24,28 @@
     <body>
         <div class="container screen" id="home">
             <p>Get Started</p>
-            <button type"button" class="btn btn-primary" id="start">Start</button>
+            <button type"button" class="btn btn-primary" id="btnStart">Start</button>
         </div>
         <div class="container screen" id="search">
             <input type="text" name="query" placeholder=""/>
             <button type="button" class="btn btn-primary" id="btnSearch">Search</button>
         </div>
         <div class="container screen" id="results">
-            
+            <p id="numResults">Searching...</p>
+            <div class="card" id="template">
+                <img class="card-img-top" src="..." alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary">Review</a>
+                </div>
+            </div>
         </div>
         
         <script>
             function doSearch() {
+                $("#numResults").text("Searching...");
                 // Built by LucyBot. www.lucybot.com
                 var url = "https://api.nytimes.com/svc/movies/v2/reviews/search.json";
                 url += '?' + $.param({
@@ -50,22 +60,34 @@
                 }).fail(function(err) {
                   throw err;
                 });
+                $("#search").hide();
+                $("#results").show();
             }
             
             function loadResponse(response) {
                 console.log(response);
                 console.log(response.results);
-                $("#results").append("<p>Received " + response.results.length + " results.</p>");
+                $("#numResults").text("Received " + response.results.length + " results.");
                 $.each(response.results, function(i, v) {
-                    var review = v["headline"];
-                    $("#results").append("<p><a href=\"" + v["link"]["url"] + "\">" + review + "</a> by " + v["byline"] + "</p>");
+                    var template = $("#template").clone();
+                    template.find("img").attr("src", v["multimedia"]["src"]);
+                    template.find("h5").text(v["headline"]);
+                    template.find("h6").text(v["byline"]);
+                    template.find("a").attr("href", v["link"]["url"]);
+                    template.show();
+                    $("#results").append(template);
                 });
             }
             
             $("#btnSearch").click(function() { doSearch(); });
+            $("#btnStart").click(function() {
+                $("#home").hide();
+                $("#search").show();
+            });
             
             $("body").ready(function() {
                 $("#home").show();
+                $("#template").hide();
             })
         </script>
     </body>
