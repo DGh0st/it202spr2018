@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        
+        <title>Deep Patel - Homework 8</title>
+        
+        <!-- Bootstrap core CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+        
+        <!-- Bootstrap core JavaScript -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        
+        <style type="text/css">
+            .screen {
+                display: none;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container screen" id="home">
+            <h1>Weather Data</h1>
+            <p>Search for weather data using zipcode</p>
+            <button type"button" class="btn btn-primary" id="btnStart">Start</button>
+        </div>
+        <div class="container screen" id="search">
+            <input type="text" name="query" placeholder=""/>
+            <button type="button" class="btn btn-primary" id="btnSearch">Search</button>
+        </div>
+        <div class="container screen" id="results">
+            <p id="condition">Searching...</p>
+            <p id="template"></p>
+        </div>
+        
+        <script>
+            function doSearch() {
+                $("#condition").text("Searching...");
+                var url = "https://query.yahooapis.com/v1/public/yql?q=select * from weather.forecast where woeid in (select woeid from geo.places(1) where text='" + $("input[name='query']").val() + "')&format=json";
+                $.ajax({
+                  url: url,
+                  method: 'GET',
+                }).done(function(result) {
+                  loadResponse(result);
+                }).fail(function(err) {
+                  throw err;
+                });
+                $("#search").hide();
+                $("#results").show();
+            }
+            
+            function loadResponse(response) {
+                console.log(response);
+                console.log(response.query.results);
+                console.log(response.query.results.channel)
+                console.log(response.query.results.channel.item)
+                var item = response.query.results.channel.item;
+                $("#condition").text(item.title + " is " + item.condition.text + " (" + item.condition.temp + " ℉).");
+                $.each(item.forecast, function(i, v) {
+                    var template = $("#template").clone();
+                    template.text(v.day + " " + v.date + " will be " + v.text + " with high " + v.high + " ℉ and low " + v.low + " ℉");
+                    template.show();
+                    $("#results").append(template);
+                });
+            }
+            
+            $("#btnSearch").click(function() { doSearch(); });
+            $("#btnStart").click(function() {
+                $("#home").hide();
+                $("#search").show();
+            });
+            
+            $("body").ready(function() {
+                $("#home").show();
+                $("#template").hide();
+            })
+        </script>
+    </body>
+</html>
