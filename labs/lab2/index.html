@@ -73,6 +73,7 @@
                     template.find("img").attr("src", v["multimedia"]["src"]);
                     template.find("h5").text(v["headline"]);
                     template.find("h6").text(v["byline"]);
+                    template.find("p").text(v["summary_short"]);
                     template.find("a").attr("href", v["link"]["url"]);
                     template.show();
                     $("#results").append(template);
