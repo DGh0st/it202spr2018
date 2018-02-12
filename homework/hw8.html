@@ -53,10 +53,6 @@
             }
             
             function loadResponse(response) {
-                console.log(response);
-                console.log(response.query.results);
-                console.log(response.query.results.channel)
-                console.log(response.query.results.channel.item)
                 var item = response.query.results.channel.item;
                 $("#condition").text(item.title + " is " + item.condition.text + " (" + item.condition.temp + " ℉).");
                 $.each(item.forecast, function(i, v) {
@@ -76,7 +72,7 @@
             $("body").ready(function() {
                 $("#home").show();
                 $("#template").hide();
-            })
+            });
         </script>
     </body>
 </html>
