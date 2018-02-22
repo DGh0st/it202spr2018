@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+    
+        <title>Deep Patel - Project 2</title>
+    
+        <!-- Bootstrap core CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+        <!-- Bootstrap core JavaScript -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+        
+        <style type="text/css">
+            .screen, #templateSchoolType, #searching, #templateSchool {
+                display: none;
+                overflow: hidden;
+            }
+            
+            .title {
+                margin-top: auto;
+                margin-bottom: auto;
+            }
+        </style>
+    </head>
+    <body class="text-center">
+        <div class="container-fluid screen" id="home">
+            <div class="row p-2 m-0">
+                <h1 class="col mt-auto mb-auto">Chicago Public Schools</h1>
+            </div>
+            <button id="start" class="btn btn-primary">Get Started!</button>
+        </div>
+        <div class="container-fluid screen" id="select">
+            <div class="row p-2 m-0">
+                <h1 class="col mt-auto mb-auto">Search Chicago Public Schools</h1>
+            </div>
+            <div class="form-group">
+                <label for="schoolTypes">Search by type(s):</label>
+                <select multiple class="form-control" id="schoolTypes" style="height: 285px;">
+                    <option id="templateSchoolType"></option>
+                </select>
+            </div>
+            <button id="search" class="btn btn-primary">Search</button>
+        </div>
+        <div class="container-fluid screen" id="result">
+            <div class="row p-2 m-0" id="resultsTitleBar">
+                <button class="btn btn-dark col-1" id="backToSearch">&larr;</button>
+                <h1 class="col-10 mt-auto mb-auto">Results</h1>
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <b><p id="searching" class="m-0 align-middle">Searching...</p></b>
+                    <div class="list-group overflow-scroll">
+                        <div class="list-group-item list-group-item-action flex-column align-items-start" id="templateSchool">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1"></h5>
+                                <small></small>
+                            </div>
+                            <p class="mb-1"></p>
+                            <div style="height:5px;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-8" id="map"></div>
+            </div>
+        </div>
+        
+        <script>
+            var map;
+            var markers = [];
+            
+            function initMap() {
+                map = new google.maps.Map(document.getElementById('map'), {
+                    zoom: 10,
+                    center: {lat: 41.8781, lng: -87.7298}
+                });
+            }
+            
+            function getSchoolTypes() {
+                $.ajax({
+                    url: "https://data.cityofchicago.org/resource/76dk-7ieb.json?$select=school_type&$group=school_type",
+                    method: 'GET',
+                }).done(function(response) {
+                    $.each(response, function(i, v) {
+                        var cloneSchoolType = $("#templateSchoolType").clone();
+                        cloneSchoolType.attr("id", v.school_type.replace(" ", "_"));
+                        cloneSchoolType.text(v.school_type);
+                        $("#schoolTypes").append(cloneSchoolType);
+                    });
+                    
+                    $("#start").prop("disabled", false);
+                }).fail(function(err) {
+                    throw err;
+                });
+            }
+            
+            function removeAllMarkers() {
+                $.each(markers, function(i, v) {
+                    v.setMap(null);
+                });
+                markers = [];
+            }
+            
+            function getIconFromType(type) {
+                if (type === "Magnet")
+                    return "img/blue.png";
+                else if (type === "Small")
+                    return "img/cyan.png";
+                else if (type === "Career academy")
+                    return "img/dark_blue.png";
+                else if (type === "Charter")
+                    return "img/dark_cyan.png";
+                else if (type === "Citywide-Option")
+                    return "img/dark_green.png";
+                else if (type === "Classical")
+                    return "img/dark_red.png";
+                else if (type === "Contract")
+                    return "img/dark_yellow.png";
+                else if (type === "Military academy")
+                    return "img/green.png";
+                else if (type === "Neighborhood")
+                    return "img/pink.png";
+                else if (type === "Regional gifted center")
+                    return "img/purple.png";
+                else if (type === "Selective enrollment")
+                    return "img/red.png";
+                else if (type === "Special Education")
+                    return "img/yellow.png";
+                else
+                    return "img/grey.png";
+            }
+            
+            function getColorFromType(type) {
+                if (type === "Magnet")
+                    return "Blue";
+                else if (type === "Small")
+                    return "Cyan";
+                else if (type === "Career academy")
+                    return "DarkBlue";
+                else if (type === "Charter")
+                    return "#00BBBB";
+                else if (type === "Citywide-Option")
+                    return "DarkGreen";
+                else if (type === "Classical")
+                    return "DarkRed";
+                else if (type === "Contract")
+                    return "#BBBB00";
+                else if (type === "Military academy")
+                    return "#00F000";
+                else if (type === "Neighborhood")
+                    return "Fuchsia";
+                else if (type === "Regional gifted center")
+                    return "RebeccaPurple";
+                else if (type === "Selective enrollment")
+                    return "Red";
+                else if (type === "Special Education")
+                    return "Yellow";
+                else
+                    return "Grey";
+            }
+            
+            function searchSchoolsByType() {
+                var types = "''";
+                $("#schoolTypes option:selected").each(function(i, v) {
+                    types += ", '" + v.text + "'";
+                })
+                
+                var calculatedHeight = $(window).height() - $("#resultsTitleBar").outerHeight(true);
+                $("#searching").text("Searching...").css("height", calculatedHeight).css("line-height", calculatedHeight / 16).show();
+                $(".list-group-item:not(#templateSchool)").remove();
+                $(".list-group").css("height", calculatedHeight).hide();
+                $("#map").css("height", calculatedHeight);
+                
+                $.ajax({
+                    url: "https://data.cityofchicago.org/resource/76dk-7ieb.json?$WHERE=school_type IN (CURRENT_TYPES)".replace("CURRENT_TYPES", types),
+                    method: 'GET',
+                }).done(function(response) {
+                    removeAllMarkers();
+                    if (response.length != 0) {
+                        var colors = {};
+                        
+                        $.each(response, function(i, v) {
+                            var schoolName = v.long_name;
+                            var latitude = parseFloat(v.school_latitude);
+                            var longitude = parseFloat(v.school_longitude);
+                            var type = v.school_type;
+                            var marker = new google.maps.Marker({
+                                position: {lat: latitude, lng: longitude},
+                                map: map,
+                                title: v.long_name,
+                                icon: getIconFromType(type)
+                            });
+                            markers.push(marker);
+                            
+                            var cloneTemplateSchool = $("#templateSchool").clone();
+                            cloneTemplateSchool.attr("id", "school_" + v.short_name);
+                            cloneTemplateSchool.find("div > h5").text(schoolName);
+                            cloneTemplateSchool.find("div > small").text(type);
+                            cloneTemplateSchool.find("p").text(v.address);
+                            cloneTemplateSchool.find("div:last-child").css("background-color", getColorFromType(type));
+                            $(".list-group").eq(0).append(cloneTemplateSchool);
+                        });
+                    
+                        $("#searching").hide();
+                        $(".list-group").show().scrollTop(0);
+                    } else {
+                        $("#searching").text("No results").show();
+                    }
+                }).fail(function(err) {
+                    throw err;
+                });
+            }
+            
+            $("body").ready(function() {
+                $("#home").show();
+                $(".list-group").css("overflow-y", "scroll").hide();
+                $("#start").prop("disabled", true);
+                getSchoolTypes();
+            });
+            
+            $(window).resize(function() {
+               var calculatedHeight = $(window).height() - $("#resultsTitleBar").outerHeight(true);
+                $("#searching").css("height", calculatedHeight).css("line-height", calculatedHeight / 16);
+                $(".list-group").css("height", calculatedHeight);
+                $("#map").css("height", calculatedHeight);
+            });
+            
+            $("#start").click(function() {
+                $(".screen").hide();
+                $("#select").show();
+            });
+            
+            $("#search").click(function() {
+                $(".screen").hide();
+                $("#result").show();
+                searchSchoolsByType();
+            });
+            
+            $("#backToSearch").click(function() {
+                $(".screen").hide();
+                $("#select").show();
+                $("#schoolTypes option:selected").prop("selected", false);
+            });
+        </script>
+        <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAM-NxYi-E6HD1N18M75-jbqIwuo-CDzSA&callback=initMap">
+        </script>
+    </body>
+</html>
