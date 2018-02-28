@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>repl.it</title>
+    <link href="index.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <canvas id="myCanvas"></canvas>
+    <script>
+      var c=document.getElementById("myCanvas");
+var ctx=c.getContext("2d");
+ctx.fillStyle = "blue";
+
+var harm = {x: 50, y: 50, color:"red", radius: 25, direction: {x: -1, y: 1}};
+var player = {x: 100, y: 50, color:"green", radius: 25};
+
+function draw() {
+  ctx.clearRect(0,0,c.width,c.height);
+  
+  // check collision
+  var dx = harm.x - player.x;
+  var dy = harm.y - player.y;
+  var distance = Math.sqrt((dx * dx) + (dy * dy));
+  if (distance <  harm.radius + player.radius) {
+    if (Math.abs(dx) > Math.abs(dy))
+      harm.direction.x *= -1;
+    else
+      harm.direction.y *= -1;
+  }
+  
+  // move harm
+  harm.x += harm.direction.x;
+  harm.y += harm.direction.y;
+  if (harm.x < harm.radius || harm.x > c.width - harm.radius)
+    harm.direction.x *= -1;
+  if (harm.y < harm.radius || harm.y > c.height - harm.radius)
+    harm.direction.y *= -1;
+
+  // draw harm
+  ctx.fillStyle = harm.color;
+  ctx.beginPath();
+  ctx.arc(harm.x,harm.y,harm.radius,0,2*Math.PI);
+  ctx.fill();
+  
+  // draw player
+  ctx.fillStyle = player.color;
+  ctx.beginPath();
+  ctx.arc(player.x,player.y,player.radius,0,2*Math.PI);
+  ctx.fill();
+  
+  requestAnimationFrame(draw);
+}
+
+draw();
+
+
+
+
+
+
+    </script>
+  </body>
+</html>
