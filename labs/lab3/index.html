@@ -9,14 +9,20 @@
   </head>
   <body>
     <canvas id="myCanvas"></canvas>
+    <img src="https://fagamechal.files.wordpress.com/2014/08/starsbg2.jpg" style="display:none;" id="background">
+    <img src="https://pre00.deviantart.net/0f0e/th/pre/i/2013/130/4/d/asteroid_stock_by_fimar-d64qnwa.png" style="display:none;" id="asteroid">
+    <img src="https://blvcccvrd.com/images/star-clipart-transparent-background-6.png" style="display:none;" id="star">
+    <img src="http://assets.stickpng.com/thumbs/580b585b2edbce24c47b2d2a.png" style="display:none;" id="rocket">
     <script>
       var c=document.getElementById("myCanvas");
+      c.width = 500;
+      c.height = 300;
       var ctx=c.getContext("2d");
       
       var game = {lives: 3, score: 0, state: "play", level: 1};
-      var harm = {x: 75, y: 50, color:"red", radius: 25, direction: {x: 1, y: 1}};
-      var benefit = {x: 150, y: 50, color:"green", radius: 5, direction: {x: 1, y: -1}};
-      var player = {x: 25, y: 50, color:"blue", radius: 25, playerMovementSpeed:1};
+      var harm = {x: 75, y: 50, color:"red", radius: 25, direction: {x: 1, y: 1}, img:"asteroid"};
+      var benefit = {x: 150, y: 50, color:"green", radius: 5, direction: {x: 1, y: -1}, img:"star"};
+      var player = {x: 25, y: 50, color:"blue", radius: 25, playerMovementSpeed:1, img:"rocket"};
       var keys = [];
       
       function checkCollisionWithEntity(player, entity, callback) {
@@ -33,9 +39,10 @@
         entity.y += entity.direction.y;
         if (entity.x < entity.radius) {
           entity.radius = Math.random() * 25;
+          if (entity.radius < 5)
+            entity.radius = 5;
           entity.y = Math.random() * c.height;
           entity.x = c.width - entity.radius;
-          entity.direction.x = -game.level;
         } else if (entity.x > c.width - entity.radius) {
           entity.direction.x = (entity.x - c.width) / entity.radius * game.level;
           if (entity.direction.x < -game.level)
@@ -54,9 +61,11 @@
       
       function drawEntity(entity) {
         ctx.fillStyle = entity.color;
-        ctx.beginPath();
+        /*ctx.beginPath();
         ctx.arc(entity.x, entity.y, entity.radius, 0, 2*Math.PI);
-        ctx.fill();
+        ctx.fill();*/
+        ctx.beginPath();
+        ctx.drawImage($("#" + entity.img)[0], entity.x - entity.radius, entity.y - entity.radius, 2 * entity.radius, 2 * entity.radius);
       }
       
       function movePlayer() {
@@ -95,8 +104,15 @@
         }
       }
       
+      function drawBackground() {
+        ctx.beginPath();
+        ctx.drawImage($("#background")[0], 0, 0, c.width, c.height);
+      }
+      
       function draw() {
         ctx.clearRect(0, 0, c.width, c.height);
+        
+        drawBackground();
         
         if (game.state == "play") {
           // move players
@@ -108,6 +124,8 @@
             harm.x = c.width - harm.radius;
             harm.y = Math.random() * c.height;
             harm.radius = Math.random() * 25;
+            if (harm.radius < 5)
+              harm.radius = 5;
           });
           
           // check collision with benefit
@@ -116,8 +134,11 @@
             benefit.x = c.width - harm.radius;
             benefit.y = Math.random() * c.height;
             benefit.radius = Math.random() * 25;
+            if (benefit.radius < 5)
+              benefit.radius = 5;
             
-            game.level++;
+            if (game.score % 1000 == 0)
+              game.level++;
           });
           
           // move entities
@@ -132,10 +153,10 @@
         
         // draw score and lives
         ctx.beginPath();
-        ctx.fillStyle = "black";
+        ctx.fillStyle = "white";
         ctx.font = "Arial";
         ctx.textAlign = "center";
-        ctx.fillText("Lives: " + game.lives + " Score: " + game.score, c.width / 2, 10);
+        ctx.fillText("Lives: " + game.lives + " Score: " + game.score + " Level: " + game.level, c.width / 2, 10);
         
         // update game state
         updateGameState();
