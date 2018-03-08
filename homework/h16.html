@@ -1,0 +1,70 @@
+<style>
+textarea#log
+{
+    width: 100%;
+    height: 300px;
+}
+</style>
+
+<!-- Include dexie.js -->
+<script src="https://unpkg.com/dexie@latest/dist/dexie.js"></script>
+
+<!-- Some HTML for the log window -->
+<a href="http://dexie.org/docs/API-Reference" target="_new">Dexie API Reference (new tab)</a>
+<div style="float:right">Check out this
+  <a href="https://fiddle.jshell.net/dfahlander/5rbc996o/" target="_top">
+    await fiddle </a> also!
+</div>
+<h3>Log</h3>
+<textarea id="log"></textarea>
+
+<!-- Just a simple log function... --> 
+<script>
+  function log(txt) {document.getElementById('log').value+=txt+"\n";}
+</script>
+
+<script>
+//
+// Define database
+//
+var db = new Dexie("AppDB");
+db.version(1).stores({
+	restaurants: '++id,name,cuisine'
+});
+log ("Using Dexie v" + Dexie.semVer);
+
+//
+// Query Database
+//
+db.open().then(function(){
+
+	return db.restaurants.bulkAdd([
+  	    {name: "Talay Chicago", cuisine: "Thai"},
+        {name: "Lou Malnati's", cuisine: "Pizza"},
+        {name: "Jubranos", cuisine: "Pizza"},
+        {name: "Busy Burger", cuisine: "Hamburger"}
+    ]);
+    
+}).then(function(){
+
+	return db.restaurants
+		.where('cuisine')
+		.noneOf(["Thai"])
+		.toArray();
+
+}).then(function(restaurants){
+
+	log("Found Restaurants: " + JSON.stringify(restaurants, null, 2));
+  
+}).then(function(){
+	return db.delete(); // So you can experiment again and again...
+}).catch (Dexie.MissingAPIError, function (e) {
+	log ("Couldn't find indexedDB API");
+}).catch ('SecurityError', function(e) {
+    log ("SeurityError - This browser doesn't like fiddling with indexedDB.");
+    log ("If using Safari, this is because jsfiddle runs its samples within an iframe");
+    log ("Go run some samples instead at: https://github.com/dfahlander/Dexie.js/wiki/Samples");
+}).catch (function (e) {
+	log (e);
+});
+</script>
