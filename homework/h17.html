@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Deep Patel - Homework 17</title>
+        <script type="text/javascript">
+            if ('caches' in window) { // supports cache
+                caches.open('saved-content').then((cache) => {
+                    cache.match('img/image.jpg').then((response) => {
+                        if (response == undefined)
+                            cache.add('img/image.jpg');
+                    });
+                    cache.match('h17.html').then((response) => {
+                        if (response == undefined)
+                            cache.add('h17.html');
+                    });
+                });
+            }
+        </script>
+    </head>
+    <body>
+        <img src="img/image.jpg">
+    </body>
+</html>
