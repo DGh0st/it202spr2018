@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Canvas Animation Example</title>
+    <style>
+        body {
+            background-color: gray;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <canvas id="canvas"></canvas>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+
+    <script>
+        var c;
+        var ctx;
+        var player;
+        var target;
+    
+        window.addEventListener("deviceorientation", handleOrientation, true);
+        
+        function handleOrientation(event) {
+            var x = event.beta;  // In degree in the range [-180,180]
+            var y = event.gamma; // In degree in the range [-90,90]
+            
+            if (x >  90)
+                x = 90;
+            if (x < -90)
+                x = -90;
+            
+            if (x < -20) // left
+                player.x -= player.speed;
+            else if (x > 20)
+                player.x += player.speed;
+            if (y < -20)
+                player.y -= player.speed;
+            else if (y > 20)
+                player.y += player.speed;
+        }
+        
+        $(document).ready(function() {
+            $("#canvas").attr("width", $(window).width());
+            $("#canvas").attr("height", $(window).height());
+            
+            c = $("#canvas")[0];
+            ctx = c.getContext("2d");
+            player = { x: c.width / 2, y: c.height / 2, r: 25, color: "blue", speed: 10 };
+            target = { x: c.width / 4, y: c.height / 4, r: 25, color: "red" };
+
+            function draw() {
+                ctx.clearRect(0, 0, c.width, c.height);
+
+                $.each([player, target], function(i, v) {
+                    ctx.beginPath();
+                    ctx.arc(v.x, v.y, v.r, 0, Math.PI * 2);
+                    ctx.fillStyle = v.color;
+                    ctx.fill();
+                });
+
+                var dx = player.x - target.x;
+                var dy = player.y - target.y;
+                var distance = Math.sqrt(dx * dx + dy * dy);
+
+                if (distance < player.r + target.r) {
+                    // collision detected!
+                    console.log("collision");
+                    player.x += dx;
+                    player.y += dy;
+
+                    //TODO:  add vibration upon collision
+                    window.navigator.vibrate(200);
+                    //TODO:  add speechSynthesis notification of collision
+                    var synth = window.speechSynthesis;
+                    var utter = new SpeechSynthesisUtterance("Collision");
+                    utter.voice = synth.getVoices()[12];
+                    synth.speak(utter);
+                }
+
+
+                window.requestAnimationFrame(draw);
+            }
+
+            draw();
+
+
+
+
+
+            //TODO:  add player control on mobile via device motion API
+
+            // as part of your development process, the first step
+            //   is to output the values to the screen so that you understand what's happening
+
+            //https://developers.google.com/web/fundamentals/native-hardware/device-orientation/
+
+
+
+            $(document).keydown(function(e) {
+                switch (e.which) {
+                    case 37: // left
+                        player.x -= player.speed;
+                        break;
+
+                    case 38: // up
+                        player.y -= player.speed;
+                        break;
+
+                    case 39: // right
+                        player.x += player.speed;
+                        break;
+
+                    case 40: // down
+                        player.y += player.speed;
+                        break;
+
+                    default:
+                        return; // exit this handler for other keys
+                }
+                e.preventDefault(); // prevent the default action (scroll / move caret)
+            });
+
+
+        });
+    </script>
+
+
+</body>
+
+</html>

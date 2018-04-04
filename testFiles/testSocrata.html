@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> </title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <script type="text/javascript">
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    $.get("https://data.seattle.gov/resource/pu5n-trf4.json?$where=within_circle(incident_location,"+position.coords.latitude+","+position.coords.longitude+",500)")
+                    .done(function(response) {
+                        console.log(response);
+                    });
+                });
+            }
+        </script>
+    </body>
+</html>
