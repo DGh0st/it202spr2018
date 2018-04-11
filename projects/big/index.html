@@ -15,6 +15,34 @@
                 min-height: 500px;
             }
             
+            #parkingSpotsScreen,
+            #settingsScreen,
+            #toolbarBackArrow {
+                display: none;
+            }
+            
+            .slide-right-initial {
+                transform: translateX(-100%);
+            }
+            
+            .slide-right {
+                transition: .5s ease-in-out;
+                transform: translateX(0%);
+            }
+            
+            .slide-left {
+                transition: .5s ease-in-out;
+                transform: translateX(-100%);
+            }
+            
+            .screens {
+                overflow-x: hidden;
+            }
+            
+            .screens > div {
+                display: inline-block;
+            }
+            
             :root {
                 --mdc-theme-primary: #FF7400;
                 --mdc-theme-secondary: #FFC100;
@@ -130,8 +158,9 @@
             <div class="mdc-toolbar">
                 <div class="mdc-toolbar__row mdc-toolbar__row--custom-height">
                     <section class="mdc-toolbar__section mdc-toolbar__section--align-start">
-                        <i class="material-icons mdc-toolbar__menu-icon">restaurant</i>
-                        <span class="mdc-toolbar__title">Restaurants</span>
+                        <i class="material-icons mdc-toolbar__menu-icon" id="toolbarBackArrow">arrow_back</i>
+                        <i class="material-icons mdc-toolbar__menu-icon" id="toolbarIcon">restaurant</i>
+                        <span class="mdc-toolbar__title" id="toolbarTitle">Restaurants</span>
                     </section>
                     <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
                         <button id="btnCenterMap" class="mdc-toolbar__menu-icon mdc-fab material-icons" aria-label="Location" data-mdc-auto-init="MDCRipple">
@@ -143,35 +172,75 @@
                     </section>
                 </div>
             </div>
-            <div class="mdc-layout-grid">
-                <div class="mdc-layout-grid__inner">
-                    <div id="restaurants-map" class="mdc-layout-grid__cell mdc-layout-grid__cell--span-9-desktop mdc-layout-grid__cell--span-5-tablet mdc-layout-grid__cell--span-4-phone">
-                        <!-- Add Map -->
-                    </div>
-                    <div class="side-bar mdc-layout-grid__cell mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-phone">
-                        <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--upgraded mdc-text-field--dense" data-mdc-auto-init="MDCTextField">
-                            <input type="text" id="txtSearchRestaurants" class="mdc-text-field__input">
-                            <label for="txtSearchRestaurants" class="mdc-floating-label">Search Restaurants</label>
-                            <i class="material-icons mdc-text-field__icon" tabindex="0" id="btnSearchRestaurants">search</i>
-                            <div class="mdc-notched-outline">
-                                <svg>
-                                    <path class="mdc-notched-outline__path"></path>
-                                </svg>
+            <div class="screens">
+                <div id="restaurantsScreen">
+                    <div class="mdc-layout-grid">
+                        <div class="mdc-layout-grid__inner">
+                            <div id="restaurants-map" class="mdc-layout-grid__cell mdc-layout-grid__cell--span-9-desktop mdc-layout-grid__cell--span-5-tablet mdc-layout-grid__cell--span-4-phone">
+                                <!-- Add Map -->
                             </div>
-                            <div class="mdc-notched-outline__idle"></div>
+                            <div class="side-bar mdc-layout-grid__cell mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-phone">
+                                <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--upgraded mdc-text-field--dense" data-mdc-auto-init="MDCTextField">
+                                    <input type="text" id="txtSearchRestaurants" class="mdc-text-field__input">
+                                    <label for="txtSearchRestaurants" class="mdc-floating-label">Search Restaurants</label>
+                                    <i class="material-icons mdc-text-field__icon" tabindex="0" id="btnSearchRestaurants">search</i>
+                                    <div class="mdc-notched-outline">
+                                        <svg>
+                                            <path class="mdc-notched-outline__path"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="mdc-notched-outline__idle"></div>
+                                </div>
+                                <li class="mdc-list-item" id="templateRestaurantItem">
+                                    <hr class="mdc-list-divider">
+                                    <img aria-hidden="true" class="restaurantIcon" src="" alt="Restaurant icon" style="height: 42px; width: 42px;">
+                                    <span class="mdc-list-item__text">
+                                        <span class="restaurantTitle"></span>
+                                        <span class="mdc-list-item__secondary-text restaurantAddress"></span>
+                                    </span>
+                                </li>
+                                <ul class="mdc-list" id="restaurants">
+                                    <!-- add restaurants here -->
+                                </ul>
+                            </div>
                         </div>
-                        <li class="mdc-list-item" id="templateRestaurantItem">
-                            <hr class="mdc-list-divider">
-                            <img aria-hidden="true" class="restaurantIcon" src="" alt="Restaurant icon" style="height: 42px; width: 42px;">
-                            <span class="mdc-list-item__text">
-                                <span class="restaurantTitle"></span>
-                                <span class="mdc-list-item__secondary-text restaurantAddress"></span>
-                            </span>
-                        </li>
-                        <ul class="mdc-list" id="restaurants">
-                            <!-- add restaurants here -->
-                        </ul>
                     </div>
+                </div>
+                <div id="parkingSpotsScreen">
+                    <div class="mdc-layout-grid">
+                        <div class="mdc-layout-grid__inner">
+                            <div id="parking-map" class="mdc-layout-grid__cell mdc-layout-grid__cell--span-9-desktop mdc-layout-grid__cell--span-5-tablet mdc-layout-grid__cell--span-4-phone">
+                                <!-- Add Map -->
+                            </div>
+                            <div class="side-bar mdc-layout-grid__cell mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-phone">
+                                <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--upgraded mdc-text-field--dense" data-mdc-auto-init="MDCTextField">
+                                    <input type="text" id="txtSearchParking" class="mdc-text-field__input">
+                                    <label for="txtSearchParking" class="mdc-floating-label">Search Parking</label>
+                                    <i class="material-icons mdc-text-field__icon" tabindex="0" id="btnSearchParking">search</i>
+                                    <div class="mdc-notched-outline">
+                                        <svg>
+                                            <path class="mdc-notched-outline__path"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="mdc-notched-outline__idle"></div>
+                                </div>
+                                <li class="mdc-list-item" id="templateParkingItem">
+                                    <hr class="mdc-list-divider">
+                                    <img aria-hidden="true" class="ParkingIcon" src="" alt="Parking icon" style="height: 42px; width: 42px;">
+                                    <span class="mdc-list-item__text">
+                                        <span class="parkingSpotTitle"></span>
+                                        <span class="mdc-list-item__secondary-text parkingSpotAddress"></span>
+                                    </span>
+                                </li>
+                                <ul class="mdc-list" id="parkingSpots">
+                                    <!-- add restaurants here -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div it="settingsScreen">
+                    
                 </div>
             </div>
             <aside class="mdc-dialog">
@@ -195,6 +264,8 @@
         var initialUserLocation = undefined;
         var markers = [];
         var infowindows = [];
+        var screenHistory = [];
+        var currentScreen = "restaurantsScreen";
         
         function clearPreviousMarkers() {
             for (var i = 0; i < markers.length; i++)
@@ -293,6 +364,9 @@
                         map.setCenter(restaurantPosition);
                         openInfoWindow(infowindows[i], markers[i]);
                     });
+                    $(document).on("click", "#btnParking" + restaurant.id, function(event) {
+                        updateScreen("restaurantsScreen", "parkingSpotsScreen");
+                    });
                 });
                 
                 mapClickListener = map.addListener('click', function() {
@@ -321,6 +395,63 @@
                 searchRestaurants(new google.maps.LatLng(newLatitude, newLongitude), "");
             });*/
         }
+        
+        function updateScreen(fromScreenId, toScreenId) {
+            screenHistory.push(fromScreenId);
+            currentScreen = toScreenId;
+            
+            var fromScreen = $("#" + fromScreenId);
+            var toScreen = $("#" + toScreenId);
+            
+            var slideClass;
+            if (fromScreenId === "restaurantsScreen" || toScreenId === "settingsScreen")
+                slideClass = "slide-left";
+            else if (fromScreenId === "settingsScreen" || toScreenId === "restaurantsScreen")
+                slideClass = "slide-right";
+            
+            var didAddInitial = false;
+            if (slideClass === "slide-right") {
+                fromScreen.addClass("slide-right-initial");
+                toScreen.addClass("slide-right-initial");
+                
+                didAddInitial = true;
+            }
+            
+            toScreen.show().addClass(slideClass);
+            fromScreen.addClass(slideClass);
+            setTimeout(function() {
+                var title;
+                var icon;
+                if (toScreenId === "parkingSpotsScreen") {
+                    title = "Parking Spots";
+                    icon = "local_parking";
+                } else if (toScreenId === "settingsScreen") {
+                    title = "Settings";
+                    icon = "settings";
+                } else {
+                    title = "Restaurants"
+                    icon = "restaurant";
+                }
+                $("#toolbarTitle").text(title);
+                $("#toolbarIcon").text(icon);
+                if (toScreenId === "settingsScreen" || toScreenId === "parkingSpotsScreen")
+                    $("#toolbarBackArrow").show();
+                else
+                    $("#toolbarBackArrow").hide();
+                fromScreen.removeClass(slideClass).hide();
+                toScreen.removeClass(slideClass);
+                
+                if (didAddInitial) {
+                    fromScreen.removeClass("slide-right-initial");
+                    toScreen.removeClass("slide-right-initial");
+                }
+            }, 400);
+        }
+        
+        $("#toolbarBackArrow").on("click", function(event) {
+            if (screenHistory.length > 0)
+                updateScreen(currentScreen, screenHistory.pop());
+        });
         
         $("#txtSearchRestaurants").on("keyup", function(event) {
             if (event.keyCode == 13) {
