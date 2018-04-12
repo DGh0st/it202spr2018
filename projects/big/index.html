@@ -11,7 +11,7 @@
             body, html {
                 margin: 0px;
                 height: 100%;
-                overflow-y: hidden;
+                overflow: hidden;
                 min-height: 500px;
             }
             
@@ -28,11 +28,13 @@
             .slide-right {
                 transition: .5s ease-in-out;
                 transform: translateX(0%);
+                display: inline-block;
             }
             
             .slide-left {
                 transition: .5s ease-in-out;
                 transform: translateX(-100%);
+                display: inline-block;
             }
             
             .screens {
@@ -40,7 +42,7 @@
             }
             
             .screens > div {
-                display: inline-block;
+                background-color: #FFC100;
             }
             
             :root {
@@ -78,13 +80,19 @@
                 --mdc-layout-grid-gutter-phone: 0px;
             }
             
-            #restaurants-map {
+            #restaurants-map,
+            #parking-map {
                 height: calc(100vh - 64px);
             }
             
-            #restaurants {
+            #restaurants,
+            #parkingSpots {
                 height: calc(100vh - 64px - 78px);
                 overflow-y: auto;
+            }
+            
+            .screens > div {
+                min-height: calc(100vh - 64px);
             }
             
             @media(max-width: 480px) {
@@ -92,11 +100,13 @@
                     overflow-y: unset;
                 }
                 
-                #restaurants-map {
+                #restaurants-map,
+                #parking-map {
                     height: calc(100vh - 64px - 78px * 2);
                 }
                 
-                #restaurants {
+                #restaurants,
+                #parkingSpots {
                     height: unset;
                     overflow-y: unset;
                 }
@@ -122,7 +132,8 @@
                 box-shadow: none;
             }
             
-            #templateRestaurantItem {
+            #templateRestaurantItem,
+            #templateParkingItem {
                 display: none;
             }
             
@@ -239,8 +250,8 @@
                         </div>
                     </div>
                 </div>
-                <div it="settingsScreen">
-                    
+                <div id="settingsScreen">
+                    <div></div>
                 </div>
             </div>
             <aside class="mdc-dialog">
@@ -259,11 +270,15 @@
         
         <script>
         var map = undefined;
+        var map2 = undefined;
         var mapClickListener = undefined;
         var service = undefined;
         var initialUserLocation = undefined;
+        var pickedRestaurantLocation = undefined;
+        var restaurantCenterMarker = undefined;
         var markers = [];
         var infowindows = [];
+        var parkingSpotsCenterMarker = undefined;
         var screenHistory = [];
         var currentScreen = "restaurantsScreen";
         
@@ -304,6 +319,14 @@
                 });
             else
                 map.setCenter(position);
+                
+            if (restaurantCenterMarker != undefined)
+                restaurantCenterMarker.setMap(null);
+            restaurantCenterMarker = new google.maps.Marker({
+                position: position,
+                map: map,
+                icon: "map_center.png"
+            });
             
             var request = {
                 location: position,
@@ -365,6 +388,8 @@
                         openInfoWindow(infowindows[i], markers[i]);
                     });
                     $(document).on("click", "#btnParking" + restaurant.id, function(event) {
+                        pickedRestaurantLocation = restaurantPosition;
+                        initParkingShotsMap();
                         updateScreen("restaurantsScreen", "parkingSpotsScreen");
                     });
                 });
@@ -376,6 +401,12 @@
         }
         
         function initMap() {
+            initRestaurantsMap();
+            initParkingShotsMap();
+        }
+        
+        function initRestaurantsMap() {
+            clearPreviousMarkers();
             var latitude = 41.8780; // backup latitude
             var longitude = -87.6298; // backup longitude
             if (initialUserLocation != undefined)
@@ -384,20 +415,74 @@
                 searchRestaurants(new google.maps.LatLng(latitude, longitude), "");
             
             // add events
-            /*google.maps.event.addListener(map, 'dragend', function() {
+            /*google.maps.event.addListener(map, 'center_changed', function() {
+                var newLatitude = map.getCenter().lat();
+                var newLongitude = map.getCenter().lng();
+                if (restaurantCenterMarker != undefined)
+                    restaurantCenterMarker.setPosition(new google.maps.LatLng(newLatitude, newLongitude));
+            });
+            google.maps.event.addListener(map, 'dragend', function() {
+                clearPreviousMarkers();
                 var newLatitude = map.getCenter().lat();
                 var newLongitude = map.getCenter().lng();
                 searchRestaurants(new google.maps.LatLng(newLatitude, newLongitude), "");
             });
             google.maps.event.addListener(map, 'zoom_changed', function() {
+                clearPreviousMarkers();
                 var newLatitude = map.getCenter().lat();
                 var newLongitude = map.getCenter().lng();
                 searchRestaurants(new google.maps.LatLng(newLatitude, newLongitude), "");
             });*/
         }
         
+        function searchParkingSpots(position) {
+            var radius = 500;
+            
+            if (map2 == undefined)
+                map2 = new google.maps.Map($("#parking-map").get(0), {
+                    zoom: 16,
+                    center: position,
+                    styles: [
+                        {
+                            "featureType": "poi",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        },
+                        {
+                            "featureType": "transit",
+                            "stylers": [
+                                {
+                                    "visibility": "off"
+                                }
+                            ]
+                        }
+                    ]
+                });
+            else
+                map2.setCenter(position);
+                
+            if (parkingSpotsCenterMarker != undefined)
+                parkingSpotsCenterMarker.setMap(null);
+            parkingSpotsCenterMarker = new google.maps.Marker({
+                position: position,
+                map: map2,
+                icon: "restaurant_center.png"
+            });
+        }
+        
+        function initParkingShotsMap() {
+            var latitude = 41.8780; // backup latitude
+            var longitude = -87.6298; // backup longitude
+            if (pickedRestaurantLocation != undefined)
+                searchParkingSpots(pickedRestaurantLocation);
+            else
+                searchParkingSpots(new google.maps.LatLng(latitude, longitude));
+        }
+        
         function updateScreen(fromScreenId, toScreenId) {
-            screenHistory.push(fromScreenId);
             currentScreen = toScreenId;
             
             var fromScreen = $("#" + fromScreenId);
@@ -408,6 +493,9 @@
                 slideClass = "slide-left";
             else if (fromScreenId === "settingsScreen" || toScreenId === "restaurantsScreen")
                 slideClass = "slide-right";
+                
+            if (slideClass === "slide-left")
+                screenHistory.push(fromScreenId);
             
             var didAddInitial = false;
             if (slideClass === "slide-right") {
@@ -419,6 +507,9 @@
             
             toScreen.show().addClass(slideClass);
             fromScreen.addClass(slideClass);
+            
+            console.log(slideClass, fromScreenId, ">", toScreenId, "=", screenHistory, didAddInitial, fromScreen, toScreen, toScreen.first().css("transform"));
+            
             setTimeout(function() {
                 var title;
                 var icon;
@@ -434,10 +525,20 @@
                 }
                 $("#toolbarTitle").text(title);
                 $("#toolbarIcon").text(icon);
-                if (toScreenId === "settingsScreen" || toScreenId === "parkingSpotsScreen")
+                
+                if (toScreenId === "settingsScreen" || toScreenId === "parkingSpotsScreen") {
                     $("#toolbarBackArrow").show();
-                else
+                    $("#btnCenterMap").hide();
+                } else {
                     $("#toolbarBackArrow").hide();
+                    $("#btnCenterMap").show();
+                }
+                    
+                if (toScreenId === "settingsScreen")
+                    $("#btnSettings").hide();
+                else
+                    $("#btnSettings").show();
+                    
                 fromScreen.removeClass(slideClass).hide();
                 toScreen.removeClass(slideClass);
                 
@@ -451,6 +552,10 @@
         $("#toolbarBackArrow").on("click", function(event) {
             if (screenHistory.length > 0)
                 updateScreen(currentScreen, screenHistory.pop());
+        });
+        
+        $("#btnSettings").on("click", function(event) {
+            updateScreen(currentScreen, "settingsScreen");
         });
         
         $("#txtSearchRestaurants").on("keyup", function(event) {
@@ -495,7 +600,7 @@
                 });
             }, {
                 timeout: 5 * 1000, // 5 seconds
-                maximumAge: 0 // 1 hour
+                maximumAge: 0 // force new data
             });
         } else {
             $("#btnCenterMap").find("span").text("location_disabled");
