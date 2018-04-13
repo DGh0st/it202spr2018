@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test Vision</title>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <style>
+          #templateFace,
+          #canvas {
+            display: none;
+          }
+        </style>
+    </head>
+    <body>
+        <video id="player" controls autoplay></video>
+        <button id="capture">Capture</button>
+        <div id="templateFace">
+          <canvas style="display: inline-block"><!-- Face of image goes here --></canvas>
+          <p style="display: inline-block"><!-- Labels go here --></p>
+        </div>
+        <canvas id="canvas" width=320 height=240></canvas>
+        <div id="imageData"></div>
+        <script>
+          var currentId = 0;
+          const player = document.getElementById('player');
+          const canvas = document.getElementById('canvas');
+          const context = canvas.getContext('2d');
+          const captureButton = document.getElementById('capture');
+          var requestBody = "";
+        
+          const constraints = {
+            video: true,
+          };
+        
+          captureButton.addEventListener('click', () => {
+            context.drawImage(player, 0, 0, canvas.width, canvas.height);
+            getImageData();
+          });
+        
+          // Attach the video stream to the video element and autoplay.
+          navigator.mediaDevices.getUserMedia(constraints)
+            .then((stream) => {
+              player.srcObject = stream;
+            });
+            
+          function getImageData() {
+              requestBody = {
+                  "requests":[
+                    {
+                      "image":{
+                        "content": canvas.toDataURL().split(",")[1]
+                      },
+                      "features":[
+                        {
+                          "type":"FACE_DETECTION"
+                        },
+                        {
+                          "type":"LABEL_DETECTION",
+                          "maxResults":10
+                        }
+                      ]
+                    }
+                  ]
+                }
+              $.ajax({
+                  method: "POST",
+                  contentType: "application/json",
+                  url: "https://vision.googleapis.com/v1/images:annotate?key=AIzaSyAM-NxYi-E6HD1N18M75-jbqIwuo-CDzSA",
+                  data: JSON.stringify(requestBody)
+              }).done(function(response) {
+                  $.each(response, function(i, f) {
+                    if (f[0].faceAnnotations != undefined && f[0].faceAnnotations.length > 0) {
+                      // calculate start position and size
+                      var vertices = f[0].faceAnnotations[0].boundingPoly.vertices; // only take first face
+                      var startX = vertices[0].x;
+                      var startY = vertices[0].y;
+                      var width = vertices[2].x - vertices[0].x;
+                      var height = vertices[2].y - vertices[0].y;
+                      
+                      var face = $("#templateFace").clone().attr("id", "face" + currentId);
+                      face.find("canvas").attr("width", width).attr("height", height);
+                      const canvas2 = face.find("canvas").get(0);
+                      currentId += 1;
+                      
+                      // add labels
+                      var labels = "";
+                      if (f[0].labelAnnotations != undefined) {
+                        $.each(f[0].labelAnnotations, function(j, l) {
+                          labels += l.description + ":" + l.score + "<br>";
+                        });
+                      } else {
+                        labels = "No labels";
+                      }
+                      face.find("p").html(labels);
+                      
+                      // add to imageData
+                      $("#imageData").prepend(face);
+                      
+                      // Draw the video frame to the canvas.
+                      const context2 = canvas2.getContext('2d');
+                      context2.drawImage(canvas, startX, startY, width, height, 0, 0, canvas2.width, canvas2.height);
+                    } else {
+                      $("#imageData").prepend("<p>No Face Detected</p>")
+                    }
+                  });
+              });
+          }
+        </script>
+    </body>
+</html>
