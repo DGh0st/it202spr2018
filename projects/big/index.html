@@ -173,7 +173,7 @@
                         <i class="material-icons mdc-toolbar__menu-icon" id="toolbarIcon">restaurant</i>
                         <span class="mdc-toolbar__title" id="toolbarTitle">Restaurants</span>
                     </section>
-                    <section class="mdc-toolbar__section mdc-toolbar__section--align-end">
+                    <section class="mdc-toolbar__section mdc-toolbar__section--shrink-to-fit mdc-toolbar__section--align-end">
                         <button id="btnCenterMap" class="mdc-toolbar__menu-icon mdc-fab material-icons" aria-label="Location" data-mdc-auto-init="MDCRipple">
                             <span class="mdc-fab__icon">gps_off</span>
                         </button>
@@ -508,8 +508,6 @@
             toScreen.show().addClass(slideClass);
             fromScreen.addClass(slideClass);
             
-            console.log(slideClass, fromScreenId, ">", toScreenId, "=", screenHistory, didAddInitial, fromScreen, toScreen, toScreen.first().css("transform"));
-            
             setTimeout(function() {
                 var title;
                 var icon;
@@ -590,12 +588,10 @@
                 var errorCode = error.code;
                 $("#btnCenterMap").on("click", function(event) {
                     dialog.lastFocusedTarget = event.target;
-                    console.log(error, errorCode);
                     if (errorCode === 1)
                         $("#dialog-message").text("GeoLocation permission not granted.");
                     else if (errorCode === 3)
                         $("#dialog-message").text("Failed to get current location.");
-                    console.log($("#dialog-message").text());
                     dialog.show();
                 });
             }, {
