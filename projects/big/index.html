@@ -85,9 +85,13 @@
                 height: calc(100vh - 64px);
             }
             
-            #restaurants,
+            #restaurants {
+                height: calc(100vh - 78px - 78px);
+                overflow-y: auto;
+            }
+            
             #parkingSpots {
-                height: calc(100vh - 64px - 78px);
+                height: calc(100vh - 78px);
                 overflow-y: auto;
             }
             
@@ -224,20 +228,9 @@
                                 <!-- Add Map -->
                             </div>
                             <div class="side-bar mdc-layout-grid__cell mdc-layout-grid__cell--span-3-desktop mdc-layout-grid__cell--span-3-tablet mdc-layout-grid__cell--span-4-phone">
-                                <div class="mdc-text-field mdc-text-field--outlined mdc-text-field--with-trailing-icon mdc-text-field--upgraded mdc-text-field--dense" data-mdc-auto-init="MDCTextField">
-                                    <input type="text" id="txtSearchParking" class="mdc-text-field__input">
-                                    <label for="txtSearchParking" class="mdc-floating-label">Search Parking</label>
-                                    <i class="material-icons mdc-text-field__icon" tabindex="0" id="btnSearchParking">search</i>
-                                    <div class="mdc-notched-outline">
-                                        <svg>
-                                            <path class="mdc-notched-outline__path"></path>
-                                        </svg>
-                                    </div>
-                                    <div class="mdc-notched-outline__idle"></div>
-                                </div>
                                 <li class="mdc-list-item" id="templateParkingItem">
                                     <hr class="mdc-list-divider">
-                                    <img aria-hidden="true" class="ParkingIcon" src="" alt="Parking icon" style="height: 42px; width: 42px;">
+                                    <!--<img aria-hidden="true" class="parkingIcon" src="" alt="Parking icon" style="height: 42px; width: 42px;">-->
                                     <span class="mdc-list-item__text">
                                         <span class="parkingSpotTitle"></span>
                                         <span class="mdc-list-item__secondary-text parkingSpotAddress"></span>
@@ -272,12 +265,15 @@
         var map = undefined;
         var map2 = undefined;
         var mapClickListener = undefined;
+        var parkingMapClickListener = undefined;
         var service = undefined;
         var initialUserLocation = undefined;
         var pickedRestaurantLocation = undefined;
         var restaurantCenterMarker = undefined;
         var markers = [];
+        var parkingMarkers = [];
         var infowindows = [];
+        var parkingInfoWindows = [];
         var parkingSpotsCenterMarker = undefined;
         var screenHistory = [];
         var currentScreen = "restaurantsScreen";
@@ -289,6 +285,15 @@
                 google.maps.event.removeListener(mapClickListener);
             markers = [];
             infowindows = [];
+        }
+        
+        function clearParkingMarkers() {
+            for (var i = 0; i < parkingMarkers.length; i++)
+                parkingMarkers[i].setMap(null);
+            if (parkingMapClickListener != undefined)
+                google.maps.event.removeListener(parkingMapClickListener);
+            parkingMarkers = [];
+            parkingInfoWindows = [];
         }
         
         function searchRestaurants(position, query) {
@@ -353,7 +358,7 @@
                 }
                 
                 $.each(response, function(i, restaurant) {
-                    var newRestaurantItem = templateRestaurantItem.clone().attr("id", restaurant.id);
+                    var newRestaurantItem = templateRestaurantItem.clone().attr("id", "lstRestaurantItem" + restaurant.id);
                     newRestaurantItem.find(".restaurantIcon").first().attr("src", restaurant.icon);
                     newRestaurantItem.find(".restaurantTitle").first().text(restaurant.name);
                     newRestaurantItem.find(".restaurantAddress").first().text(restaurant.vicinity);
@@ -361,7 +366,6 @@
                     restaurantsList.append(newRestaurantItem);
                     
                     var contentString = '<div>'+
-                                            '<div></div>'+
                                             '<h1>'+ restaurant.name +'</h1>'+
                                             '<p><b>Address: </b>'+ restaurant.vicinity +'</p>'+
                                             '<div class="restaurant-info-window-buttons">'+
@@ -389,7 +393,7 @@
                     });
                     $(document).on("click", "#btnParking" + restaurant.id, function(event) {
                         pickedRestaurantLocation = restaurantPosition;
-                        initParkingShotsMap();
+                        initParkingSpotsMap();
                         updateScreen("restaurantsScreen", "parkingSpotsScreen");
                     });
                 });
@@ -402,7 +406,6 @@
         
         function initMap() {
             initRestaurantsMap();
-            initParkingShotsMap();
         }
         
         function initRestaurantsMap() {
@@ -440,7 +443,7 @@
             
             if (map2 == undefined)
                 map2 = new google.maps.Map($("#parking-map").get(0), {
-                    zoom: 16,
+                    zoom: 19,
                     center: position,
                     styles: [
                         {
@@ -471,9 +474,74 @@
                 map: map2,
                 icon: "restaurant_center.png"
             });
+            
+            var parkingSpotsList = $("#parkingSpots").empty();
+            var templateParkingItem = $("#templateParkingItem");
+            var coordinatesIncluded = [];
+            $.ajax({
+                  url: "https://api.parkwhiz.com/v4/venues/?q=coordinates:" + position.lat() + "," + position.lng() + "%20distance:" + radius + "&page=1&per_page=20&fields=:default,coordinates",
+                  method: 'GET',
+            }).done(function(response) {
+                function closeAllInfoWindows() {
+                    for (var j = 0; j < parkingInfoWindows.length; j++)
+                            if (parkingInfoWindows[j])
+                                parkingInfoWindows[j].close();
+                }
+                
+                function openInfoWindow(infoWindow, marker) {
+                    closeAllInfoWindows();
+                    infoWindow.open(map, marker);
+                }
+                
+                $.each(response, function(i, parkingSpot) {
+                    var didAlreadyIncludeCoordinate = false;
+                    for (var i = 0; i < coordinatesIncluded.length; i++) {
+                        if (coordinatesIncluded[i][0] == parkingSpot.coordinates[0] && coordinatesIncluded[i][1] == parkingSpot.coordinates[1]) {
+                            didAlreadyIncludeCoordinate = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!didAlreadyIncludeCoordinate) {
+                        coordinatesIncluded.push(parkingSpot.coordinates);
+                        
+                        var newParkingSpotItem = templateParkingItem.clone().attr("id", "lstParkingItem" + parkingSpot.id);
+                        newParkingSpotItem.find(".parkingSpotTitle").first().text(parkingSpot.name);
+                        newParkingSpotItem.find(".parkingSpotAddress").first().text(parkingSpot.address1 + ", " + parkingSpot.city);
+                        var parkingSpotLocation = new google.maps.LatLng(parkingSpot.coordinates[0], parkingSpot.coordinates[1]);
+                        parkingSpotsList.append(newParkingSpotItem);
+                        
+                        var contentString = '<div>'+
+                                                '<h1>'+ parkingSpot.name +'</h1>'+
+                                                '<p><b>Address: </b>'+ parkingSpot.address1 +", "+ parkingSpot.city +'</p>'+
+                                            '</div>';
+                        parkingInfoWindows[i] = new google.maps.InfoWindow({
+                            content: contentString,
+                            maxWidth: $("#parking-map").width() / 2
+                        });
+                        parkingMarkers[i] = new google.maps.Marker({
+                            position: parkingSpotLocation,
+                            map: map2,
+                            title: parkingSpot.name
+                        });
+                        parkingMarkers[i].addListener('click', function() {
+                            openInfoWindow(parkingInfoWindows[i], parkingMarkers[i]);
+                        });
+                        newParkingSpotItem.on("click", function(event) {
+                            map2.setCenter(parkingSpotLocation);
+                            openInfoWindow(parkingInfoWindows[i], parkingMarkers[i]);
+                        });
+                    }
+                });
+                
+                parkingMapClickListener = map2.addListener('click', function() {
+                    closeAllInfoWindows();
+                });
+            });
         }
         
-        function initParkingShotsMap() {
+        function initParkingSpotsMap() {
+            clearParkingMarkers();
             var latitude = 41.8780; // backup latitude
             var longitude = -87.6298; // backup longitude
             if (pickedRestaurantLocation != undefined)
