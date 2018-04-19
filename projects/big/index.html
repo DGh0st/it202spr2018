@@ -16,6 +16,7 @@
                 min-height: 500px;
             }
             
+            #templateProgressBar,
             #parkingSpotsScreen,
             #settingsScreen,
             #toolbarBackArrow {
@@ -167,6 +168,10 @@
             .restaurant-info-window-buttons {
                 text-align: center;
             }
+            
+            .mdc-linear-progress__buffer {
+                background-color: #FFC100;
+            }
         </style>
     </head>
     <body class="mdc-typography">
@@ -258,6 +263,16 @@
                     </footer>
                 </div>
             </aside>
+            <div role="progressbar" class="mdc-linear-progress mdc-linear-progress--indeterminate" id="templateProgressBar">
+                <div class="mdc-linear-progress__buffering-dots"></div>
+                <div class="mdc-linear-progress__buffer"></div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+                <div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+                    <span class="mdc-linear-progress__bar-inner"></span>
+                </div>
+            </div>
         </main>
         <script src="https://unpkg.com/material-components-web@0.34.1/dist/material-components-web.js"></script>
         <script>window.mdc.autoInit();</script>
@@ -298,6 +313,10 @@
         }
         
         function searchRestaurants(position, query) {
+            var restaurantsList = $("#restaurants").empty();
+            var newProgressBar = $("#templateProgressBar").clone().attr("id", "restaurantProgressBar");
+            restaurantsList.append(newProgressBar);
+            
             var radius = 500;
             
             if (map == undefined)
@@ -344,7 +363,6 @@
             if (service == undefined)
                 service = new google.maps.places.PlacesService(map);
             
-            var restaurantsList = $("#restaurants").empty();
             var templateRestaurantItem = $("#templateRestaurantItem");
             service.nearbySearch(request, function(response) {
                 function closeAllInfoWindows() {
@@ -357,6 +375,8 @@
                     closeAllInfoWindows();
                     infoWindow.open(map, marker);
                 }
+                
+                newProgressBar.remove();
                 
                 $.each(response, function(i, restaurant) {
                     var newRestaurantItem = templateRestaurantItem.clone().attr("id", "lstRestaurantItem" + restaurant.id);
@@ -440,6 +460,10 @@
         }
         
         function searchParkingSpots(position) {
+            var parkingSpotsList = $("#parkingSpots").empty();
+            var newProgressBar = $("#templateProgressBar").clone().attr("id", "parkingSpotsProgressBar");
+            parkingSpotsList.append(newProgressBar);
+            
             var radius = 500;
             
             if (map2 == undefined)
@@ -476,7 +500,6 @@
                 icon: "restaurant_center.png"
             });
             
-            var parkingSpotsList = $("#parkingSpots").empty();
             var templateParkingItem = $("#templateParkingItem");
             var coordinatesIncluded = [];
             $.ajax({
@@ -493,6 +516,8 @@
                     closeAllInfoWindows();
                     infoWindow.open(map, marker);
                 }
+                
+                newProgressBar.remove();
                 
                 $.each(response, function(i, parkingSpot) {
                     var didAlreadyIncludeCoordinate = false;
