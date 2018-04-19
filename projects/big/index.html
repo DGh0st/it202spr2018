@@ -4,6 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <title>Restaurant Parking Finder</title>
+        <link rel="manifest" href="manifest.json">
         <link href="https://unpkg.com/material-components-web@0.34.1/dist/material-components-web.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -479,7 +480,7 @@
             var templateParkingItem = $("#templateParkingItem");
             var coordinatesIncluded = [];
             $.ajax({
-                  url: "https://api.parkwhiz.com/v4/venues/?q=coordinates:" + position.lat() + "," + position.lng() + "%20distance:" + radius + "&page=1&per_page=20&fields=:default,coordinates",
+                  url: "https://api.parkwhiz.com/v4/venues/?q=coordinates:" + position.lat() + "," + position.lng() + "%20distance:" + radius + "&page=1&per_page=50&fields=:default,coordinates",
                   method: 'GET',
             }).done(function(response) {
                 function closeAllInfoWindows() {
@@ -674,6 +675,10 @@
                 $("#dialog-messsage").text("GeoLocation not supported");
                 dialog.show();
             });
+        }
+        
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
         }
         </script>
         <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAM-NxYi-E6HD1N18M75-jbqIwuo-CDzSA&callback=initMap&libraries=places"></script>
