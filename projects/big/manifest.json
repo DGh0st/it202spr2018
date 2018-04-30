@@ -1,10 +1,10 @@
 {
-  "name": "Deep Patel",
-  "short_name": "Deep",
+  "name": "Restaurant Parking",
+  "short_name": "Parking",
   "start_url": ".",
   "display": "standalone",
   "background_color": "#f8f8f8",
-  "description": "Restaurant Parking",
+  "description": "Find parking near restaurants",
   "icons": [{
     "src": "icon.png",
     "sizes": "144x144",
