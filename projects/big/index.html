@@ -746,6 +746,8 @@
                 clearParkingMarkers();
             if (toScreenId == "settingsScreen")
                 initSettings();
+            if (fromScreenId == "settingsScreen")
+                saveSettings();
             
             var slideClass;
             if (fromScreenId === "restaurantsScreen" || toScreenId === "settingsScreen")
@@ -831,7 +833,7 @@
             searchRestaurants(new google.maps.LatLng(newLatitude, newLongitude), $("#txtSearchRestaurants").val());
         });
         
-        $("#btnSave").on("click", function(event) {
+        function saveSettings() {
             var latitude = parseFloat($("#txtLatitude").val());
             var longitude = parseFloat($("#txtLongitude").val());
             var restaurantRadius = parseFloat($("#txtRestaurantRadius").val()) * 1609.34; // convert miles to meters
@@ -859,6 +861,10 @@
             
             if (screenHistory.length > 0)
                 updateScreen(currentScreen, screenHistory.pop());
+        }
+        
+        $("#btnSave").on("click", function(event) {
+            saveSettings();
         });
         
         function initSettings() {
