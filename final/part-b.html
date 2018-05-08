@@ -93,7 +93,6 @@
                     url: "https://data.cityofchicago.org/resource/t57k-za2y.json" + filteredClinicType,
                     method: "GET"
                 }).done(function(response) {
-                    console.log(response);
                     for (var i = 0; i < markers.length; i++) {
                         markers[i].setMap(null);
                         markers[i] = null;
