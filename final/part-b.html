@@ -21,7 +21,12 @@
             }
             
             $("#btnSearch").on("click", function(event) {
-                console.log("Search clicked");
+                $.ajax({
+                    url: "https://data.cityofchicago.org/resource/t57k-za2y.json",
+                    method: "GET"
+                }).done(function(response) {
+                    console.log(response);
+                })
             });
         </script>
         <script async defer
