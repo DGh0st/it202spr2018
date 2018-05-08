@@ -1,9 +1,56 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Deep Patel - Final Part C</title>
+        <title>Deep Patel - Final Part C (Option 4)</title>
+        <style type="text/css">
+            #templateFriend {
+                display: none;
+            }
+        </style>
     </head>
     <body>
-
+        <h1>Option 4 - IndexedDB of friends</h1>
+        <div id="templateFriend">
+            <p class="name">Name</p>
+            <p class="phoneNumber">(XXX) XXX-XXXX</p>
+        </div>
+        <div id="friends"></div>
+        <script>
+            var indexedDBName = "FriendsListDB";
+            var indexedDBVersion = 1;
+            var db = undefined;
+            
+            function initListOfFriends() {
+                var request = db.transaction(["Friends"], "readwrite").objectStore("Friends").get("friends");
+                request.onsuccess = function(event) {
+                    console.log(event, event.request);
+                };
+                request.onerror = function(event) {
+                    console.log(event);
+                };
+            }
+            
+            if ('indexedDB' in window) {
+                var indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+                var request = indexedDB.open(indexedDBName, indexedDBVersion);
+                request.onerror = function(event) {
+                    console.log("indexedDB error: " + event);
+                };
+                request.onsuccess = function(event) {
+                    db = request.result;
+                    initListOfFriends();
+                };
+                request.onupgradeneeded = function(event) {
+                    db = event.target.result;
+                    var objectStore = db.createObjectStore("Friends");
+                    var friendsList = [
+                        {id: 0, name: "Deep", phone: "(123) 456-7890"},
+                        {id: 1, name: "John", phone: "(456) 456-7890"},
+                        {id: 2, name: "Doe", phone: "(789) 456-7890"}
+                    ];
+                    objectStore.add(friendsList, "friends");
+                };
+            }
+        </script>
     </body>
 </html>
