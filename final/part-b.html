@@ -11,7 +11,8 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         
         <style type="text/css">
-            #templateClinic {
+            #templateClinic,
+            #templateOption {
                 display:none;
             }
             
@@ -26,25 +27,37 @@
         </style>
     </head>
     <body>
-        <button type="button" class="btn btn-primary" id="btnSearch">Search</button>
-        <div class="col-8" id="map"><!-- place for the map --></div>
-        <div class="list-group" id="results">
-            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start" id="templateClinic">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1 clinicName">Clinic Name</h5>
-                    <small class="text-muted clinicType">Clinic Type</small>
+        <div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <label class="input-group-text" for="clinicTypeSelection">Filter Clinic By Type</label>
                 </div>
-                <p class="mb-1">
-                    <span class="clinicAddressInfo clinicAddress">Clinic Address</span>
-                    <span class="clinicAddressInfo clinicCityStateZip">City, State Zip</span>
-                    <span class="clinicAddressInfo clinicPhone">Clinic Phone</span>
-                </p>
-                <small class="text-muted clinicHours">Clinic Hours of Operation</small>
-            </a>
+                <select class="custom-select" id="clinicTypeSelection">
+                    <option value="none" selected>All</option>
+                    <option id="templateOption"></option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" id="btnSearch">Search</button>
+        </div>
+        <div class="col-8" id="map"><!-- place for the map --></div>
+        <a href="#" class="list-group-item list-group-item-action flex-column align-items-start" id="templateClinic">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1 clinicName">Clinic Name</h5>
+                <small class="text-muted clinicType">Clinic Type</small>
+            </div>
+            <p class="mb-1">
+                <span class="clinicAddressInfo clinicAddress">Clinic Address</span>
+                <span class="clinicAddressInfo clinicCityStateZip">City, State Zip</span>
+                <span class="clinicAddressInfo clinicPhone">Clinic Phone</span>
+            </p>
+            <small class="text-muted clinicHours">Clinic Hours of Operation</small>
+        </a>
+        <div class="list-group" id="results">
         </div>
         
         <script type="text/javascript">
             var map;
+            var markers = [];
             
             function initMap() {
                 map = new google.maps.Map($("#map")[0], {
@@ -53,14 +66,41 @@
                 });
             }
             
-            $("#btnSearch").on("click", function(event) {
+            $(document).ready(function() {
                 $.ajax({
-                    url: "https://data.cityofchicago.org/resource/t57k-za2y.json",
+                    url: "https://data.cityofchicago.org/resource/t57k-za2y.json?$SELECT=distinct%20clinic_type",
+                    method: "GET"
+                }).done(function(response) {
+                    var templateOption = $("#templateOption");
+                    var clinicTypeSelectionDiv = $("#clinicTypeSelection");
+                    $.each(response, function(i, v) {
+                        var currentOption = templateOption.clone().attr("id", "options" + i);
+                        currentOption.val(v["clinic_type"]);
+                        currentOption.text(v["clinic_type"]);
+                        clinicTypeSelectionDiv.append(currentOption);
+                    });
+                });
+            });
+            
+            $("#btnSearch").on("click", function(event) {
+                var filteredClinicType = "?clinic_type=";
+                var filteredValue = $("#clinicTypeSelection").val();
+                if (filteredValue === "none")
+                    filteredClinicType = "";
+                else
+                    filteredClinicType += filteredValue;
+                $.ajax({
+                    url: "https://data.cityofchicago.org/resource/t57k-za2y.json" + filteredClinicType,
                     method: "GET"
                 }).done(function(response) {
                     console.log(response);
+                    for (var i = 0; i < markers.length; i++) {
+                        markers[i].setMap(null);
+                        markers[i] = null;
+                    }
+                    markers = [];
                     var templateClinic = $("#templateClinic");
-                    var resultsDiv = $("#results");
+                    var resultsDiv = $("#results").empty();
                     $.each(response, function(i, v) {
                         var currentClinic = templateClinic.clone().attr("id", "results" + i);
                         currentClinic.find(".clinicName").text(v["site_name"]);
@@ -79,16 +119,16 @@
                         var infowindow = new google.maps.InfoWindow({
                             content: contentString
                         });
-                        var marker = new google.maps.Marker({
+                        markers[i] = new google.maps.Marker({
                             position: location,
                             map: map,
                             title: v["site_name"]
                         });
-                        marker.addListener('click', function() {
-                            infowindow.open(map, marker);
+                        markers[i].addListener('click', function() {
+                            infowindow.open(map, markers[i]);
                         });
                     });
-                })
+                });
             });
         </script>
         <script async defer
