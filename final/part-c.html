@@ -32,7 +32,10 @@
                 var request = db.transaction(["Friends"], "readwrite").objectStore("Friends").get("friends");
                 request.onsuccess = function(event) {
                     var friends = request.result;
+                    var templateFriend = $("#templateFriend");
+                    var friendsDiv = $("friends");
                     $.each(friends, function(i, v) {
+                        var currentFriend = templateFriend.clone();
                         console.log(v);
                     });
                 };
