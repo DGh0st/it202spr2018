@@ -10,10 +10,33 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
         
+        <style type="text/css">
+            #templateClinic {
+                display:none;
+            }
+            
+            .clinicAddressInfo {
+                display: block;
+            }
+        </style>
     </head>
     <body>
         <button type="button" class="btn btn-primary" id="btnSearch">Search</button>
         <div class="col-8" id="map"><!-- place for the map --></div>
+        <div class="list-group" id="results">
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start" id="templateClinic">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1 clinicName">Clinic Name</h5>
+                    <small class="text-muted clinicType">Clinic Type</small>
+                </div>
+                <p class="mb-1">
+                    <span class="clinicAddressInfo clinicAddress">Clinic Address</span>
+                    <span class="clinicAddressInfo clinicCityStateZip">City, State Zip</span>
+                    <span class="clinicAddressInfo clinicPhone">Clinic Phone</span>
+                </p>
+                <small class="text-muted clinicHours">Clinic Hours of Operation</small>
+            </a>
+        </div>
         
         <script type="text/javascript">
             function initMap() {
@@ -26,6 +49,18 @@
                     method: "GET"
                 }).done(function(response) {
                     console.log(response);
+                    var templateClinic = $("#templateClinic");
+                    var resultsDiv = $("#results");
+                    $.each(response, function(i, v) {
+                        var currentClinic = templateClinic.clone().attr("id", "results" + i);
+                        currentClinic.find(".clinicName").text(v["site_name"]);
+                        currentClinic.find(".clinicType").text(v["clinic_type"]);
+                        currentClinic.find(".clinicAddress").text(v["street_address"]);
+                        currentClinic.find(".clinicCityStateZip").text(v["city"] + ", " + v["state"] + " " + v["zip"]);
+                        currentClinic.find(".clinicPhone").text(v["phone_1"]);
+                        currentClinic.find(".clinicHours").text(v["hours_of_operation"]);
+                        resultsDiv.append(currentClinic);
+                    });
                 })
             });
         </script>
