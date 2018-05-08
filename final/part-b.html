@@ -12,12 +12,17 @@
         
     </head>
     <body>
+        <button type="button" class="btn btn-primary" id="btnSearch">Search</button>
         <div class="col-8" id="map"><!-- place for the map --></div>
         
         <script type="text/javascript">
             function initMap() {
                 console.log("Received google maps");
             }
+            
+            $("#btnSearch").on("click", function(event) {
+                console.log("Search clicked");
+            });
         </script>
         <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAM-NxYi-E6HD1N18M75-jbqIwuo-CDzSA&callback=initMap">
