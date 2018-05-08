@@ -18,6 +18,11 @@
             .clinicAddressInfo {
                 display: block;
             }
+            
+            #map {
+                height: 50vh;
+                width: 100%;
+            }
         </style>
     </head>
     <body>
@@ -39,8 +44,13 @@
         </div>
         
         <script type="text/javascript">
+            var map;
+            
             function initMap() {
-                console.log("Received google maps");
+                map = new google.maps.Map($("#map")[0], {
+                    zoom: 10,
+                    center: {lat: 41.8781, lng: -87.7298}
+                });
             }
             
             $("#btnSearch").on("click", function(event) {
@@ -60,6 +70,23 @@
                         currentClinic.find(".clinicPhone").text(v["phone_1"]);
                         currentClinic.find(".clinicHours").text(v["hours_of_operation"]);
                         resultsDiv.append(currentClinic);
+                        
+                        var location = {lat: parseFloat(v["latitude"]), lng: parseFloat(v["longitude"])};
+                        var contentString = '<div id="content">'+
+                                            '<div id="siteNotice">'+
+                                                '<h5>'+v['site_name']+'</h5>'+
+                                            '</div>';
+                        var infowindow = new google.maps.InfoWindow({
+                            content: contentString
+                        });
+                        var marker = new google.maps.Marker({
+                            position: location,
+                            map: map,
+                            title: v["site_name"]
+                        });
+                        marker.addListener('click', function() {
+                            infowindow.open(map, marker);
+                        });
                     });
                 })
             });
