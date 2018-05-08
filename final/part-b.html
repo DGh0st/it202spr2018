@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Deep Patel - Final</title>
+        <title>Deep Patel - Final Part B</title>
         
         <!-- Bootstrap core CSS -->
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
@@ -112,9 +112,17 @@
                         resultsDiv.append(currentClinic);
                         
                         var location = {lat: parseFloat(v["latitude"]), lng: parseFloat(v["longitude"])};
-                        var contentString = '<div id="content">'+
-                                            '<div id="siteNotice">'+
-                                                '<h5>'+v['site_name']+'</h5>'+
+                        var contentString = '<div class="flex-column align-items-start">' +
+                                                '<div class="d-flex w-100 justify-content-between">' +
+                                                    '<h5 class="mb-1">' + v["site_name"] + '</h5>' +
+                                                    '<small class="text-muted">' + v["clinic_type"] + '</small>' +
+                                                '</div>' +
+                                                '<p class="mb-1">' +
+                                                    '<span class="clinicAddressInfo">' + v["street_address"] + '</span>' +
+                                                    '<span class="clinicAddressInfo">' + v["city"] + ", " + v["state"] + " " + v["zip"] + '</span>' +
+                                                    '<span class="clinicAddressInfo">' + v["phone_1"] + '</span>' +
+                                                '</p>' +
+                                                '<small class="text-muted">' + v["hours_of_operation"] + '</small>' +
                                             '</div>';
                         var infowindow = new google.maps.InfoWindow({
                             content: contentString
